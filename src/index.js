@@ -18,7 +18,6 @@ const { migrateUser } = require("./models/users");
     console.log({ status: "success" });
     process.exit();
   } catch (error) {
-    // console.clear();
     console.log("Failed to migrate");
     console.error(error);
     process.exit(1);
