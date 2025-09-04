@@ -1,12 +1,6 @@
 # Migration Tool
 
-This project is a Node.js-based migration utility designed to transfer data from a WordPress MySQL database to a MongoDB database. It supports migration of users, posts, media, tags, and categories, and includes utilities for formatting and queue management.
-
-## Features
-
-- Migrate WordPress users, posts, media, tags, and categories to MongoDB
-- Reset and finalize MongoDB collections before migration
-- Utilities for formatting post content and managing async queues
+A Node.js utility for migrating WordPress data from MySQL to MongoDB. This project includes models for users, posts, media, tags, and categories, as well as utilities for formatting, queueing, and document normalization. This tool is only used for Fresh Group's web CMS with data that has already been adjusted.
 
 ## Project Structure
 
@@ -29,7 +23,8 @@ migration/
     │   └── users.js
     └── utils/
         ├── formatPw.js
-        └── queue.js
+        ├── queue.js
+        └── normalize.mongo.doc.js
 ```
 
 ## Setup
@@ -47,20 +42,11 @@ migration/
 3. **Run migration:**
 
    ```sh
-   node src/index.js
+   npm run migrate
    ```
-
-## Scripts
-
-- `npm run dev` — Run with nodemon for development
-- `npm run migrate` — Run migration script
 
 ## Requirements
 
 - Node.js
 - MySQL database (WordPress)
 - MongoDB database
-
-## License
-
-See `package.json
