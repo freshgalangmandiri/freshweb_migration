@@ -30,7 +30,7 @@ const migrateUser = async () => {
       return user;
     });
 
-    return await mongo.collection("users").insertMany(data);
+    return await (await mongo()).collection("users").insertMany(data);
   } catch (error) {
     console.log(error);
     throw new Error("Failed to migrate users");

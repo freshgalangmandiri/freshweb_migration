@@ -1,17 +1,21 @@
 const { MongoClient, ObjectId } = require("mongodb");
 const { destination_database } = require("../config.json");
 
-const client = new MongoClient(destination_database.url);
+const options = {
+  maxPoolSize: 10,
+  minPoolSize: 0,
+  serverSelectionTimeoutMS: 100_000,
+  socketTimeoutMS: 45000,
+  maxIdleTimeMS: 30000,
+  monitorCommands: true,
+};
 
-async function connectToMongo() {
-  try {
+const client = new MongoClient(destination_database.url, options);
+
+module.exports = {
+  mongo: async () => {
     await client.connect();
-    console.log("Terhubung ke MongoDB");
-  } catch (error) {
-    console.error("Koneksi ke MongoDB gagal:", error);
-  }
-}
-
-connectToMongo();
-
-module.exports = { mongo: client.db(destination_database.database), ObjectId };
+    return client.db(destination_database.database);
+  },
+  ObjectId,
+};

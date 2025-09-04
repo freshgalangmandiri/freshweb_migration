@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "migrate": "node src/index.js",
+    "migrate": "node --expose-gc src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -15,10 +15,12 @@ const { migrateUser } = require("./models/users");
 
     await finalizing();
     console.clear();
-    console.log("Done");
+    console.log({ status: "success" });
+    process.exit();
   } catch (error) {
     // console.clear();
     console.log("Failed to migrate");
     console.error(error);
+    process.exit(1);
   }
 })();

@@ -3,6 +3,7 @@ const { mongo } = require("../db/mongo_connection");
 const resetDb = async () => {
   try {
     console.clear();
+    process.stdout.write(`\r(Database) Preparing ...\r`);
     const collections = [
       "tags",
       "categories",
@@ -14,7 +15,7 @@ const resetDb = async () => {
     ];
     const result = await Promise.all(
       collections.map(async (collection) => {
-        return await mongo.collection(collection).deleteMany({});
+        return await (await mongo()).collection(collection).deleteMany({});
       })
     );
 

@@ -32,8 +32,8 @@ const getParents = (id, data, parents = []) => {
 
 const migrateTerm = async () => {
   try {
-    process.stdout.write("\rMigrating Tags and Categories...\r");
     console.clear();
+    process.stdout.write("\rMigrating Tags and Categories...\r");
     const result = await getTermData();
     const data = result.reduce(
       (acc, current, index) => {
@@ -49,7 +49,7 @@ const migrateTerm = async () => {
         process.stdout.write(
           `\r(Tags and Categories) Adjustment data ${index + 1}/${
             result.length
-          }...\r`
+          } (${(((index + 1) / result.length) * 100).toFixed(2)} %)...\r`
         );
         return acc;
       },
@@ -66,10 +66,12 @@ const migrateTerm = async () => {
     // write to mongo
     // console.log(Object.keys(data));
     console.clear();
-    process.stdout.write("\r(Tags and Categories) Writing to mongo...\r");
+    process.stdout.write(
+      "\r(Tags and Categories) Writing to (await mongo())...\r"
+    );
     return await Promise.all(
       Object.keys(data).map(async (key) => {
-        return await mongo.collection(key).insertMany(data[key]);
+        return await (await mongo()).collection(key).insertMany(data[key]);
       })
     );
   } catch (error) {

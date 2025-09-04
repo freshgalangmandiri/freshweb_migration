@@ -19,7 +19,7 @@ const migrateMedia = async () => {
   try {
     const result = await getMediaData();
 
-    return await mongo.collection("media").insertMany(
+    return await (await mongo()).collection("media").insertMany(
       result.map((item) => ({
         ...item,
         _id: new ObjectId(),
