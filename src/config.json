@@ -1,0 +1,12 @@
+{
+  "database": {
+    "host": "localhost",
+    "user": "root",
+    "password": "bismillah",
+    "database": "training_sdm"
+  },
+  "destination_database": {
+    "url": "mongodb://localhost:27017/",
+    "database": "trainingsdm"
+  }
+}
