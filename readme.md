@@ -2,6 +2,10 @@
 
 A Node.js utility for migrating WordPress data from MySQL to MongoDB. This project includes models for users, posts, media, tags, and categories, as well as utilities for formatting, queueing, and document normalization. This tool is only used for Fresh Group's web CMS with data that has already been adjusted.
 
+## Note
+
+This tool using thread worker for formating and adjust posts from wordpress to Fresh Group's web CMS. Set worker on config for adjust your memory.
+
 ## Project Structure
 
 ```
