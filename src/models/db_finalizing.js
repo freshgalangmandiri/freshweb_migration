@@ -6,6 +6,7 @@ const finalizing = async () => {
   const listCollections = {
     analytics: null,
     tokens: null,
+    posts_lock: null,
     posts: "idOld",
     posts_maintain: "idOld",
     paketWisata: "idOld",
