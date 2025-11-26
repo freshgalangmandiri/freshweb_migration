@@ -3,11 +3,12 @@
     "host": "localhost",
     "user": "root",
     "password": "bismillah",
-    "database": "training_sdm"
+    "database": "temp"
   },
   "destination_database": {
-    "url": "mongodb://localhost:27017/",
-    "database": "trainingsdm"
+    "url": "mongodb://root:example@localhost:27017/",
+    "database": "arena"
   },
-  "workerSize": 15
+  "workerSize": 15,
+  "prefix": "aw_"
 }

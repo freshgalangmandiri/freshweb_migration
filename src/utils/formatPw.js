@@ -1,3 +1,5 @@
+const { JSDOM } = require("jsdom");
+
 const executeFilter = (role, content) => {
   if (!content) return "";
 

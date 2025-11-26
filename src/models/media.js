@@ -1,10 +1,11 @@
 const { mongo, ObjectId } = require("../db/mongo_connection");
 const { query } = require("../db/mysql_connnection");
+const { prefix } = require("../config.json");
 
 const getMediaData = async (page) => {
   try {
     const SQL = `SELECT 
-		ID oldId, post_date createdAt, post_title title, SUBSTRING_INDEX(guid, '/', -1) filename, CONCAT('/media/', SUBSTRING_INDEX(guid, 'uploads/', -1)) url FROM wp_posts 
+		ID oldId, post_date createdAt, post_title title, SUBSTRING_INDEX(guid, '/', -1) filename, CONCAT('/media/', SUBSTRING_INDEX(guid, 'uploads/', -1)) url FROM ${prefix}posts 
 		WHERE post_type = "attachment" AND post_mime_type LIKE "image/%"`;
     const result = await query(SQL);
     return result;
@@ -19,12 +20,14 @@ const migrateMedia = async () => {
   try {
     const result = await getMediaData();
 
-    return await (await mongo()).collection("media").insertMany(
+    await (await mongo()).collection("media").insertMany(
       result.map((item) => ({
         ...item,
         _id: new ObjectId(),
       }))
     );
+
+    return { media: result.length };
   } catch (error) {
     console.log(error);
     throw new Error("Failed to migrate media");

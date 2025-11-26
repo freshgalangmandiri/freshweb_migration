@@ -5,17 +5,26 @@ const { migratePost } = require("./models/posts");
 const { migrateTerm } = require("./models/term");
 const { migrateUser } = require("./models/users");
 
+const option = {
+  isMultilanguage: true,
+  migratePaketWisata: false,
+};
+
 (async () => {
   try {
     await resetDb();
-    await migrateTerm();
-    await migrateUser();
-    await migrateMedia();
-    await migratePost();
 
-    await finalizing();
+    const term = await migrateTerm({ ...option });
+    const user = await migrateUser();
+    const media = await migrateMedia();
+    const post = await migratePost({ ...option });
+
+    await finalizing({ ...option });
     console.clear();
-    console.log({ status: "success" });
+    console.log({
+      status: "success",
+      details: { ...term, ...user, ...media, ...post, ...option },
+    });
     process.exit();
   } catch (error) {
     console.log("Failed to migrate");

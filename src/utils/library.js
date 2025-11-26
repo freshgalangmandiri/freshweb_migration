@@ -9,4 +9,24 @@ const splitArray = (arr, size) =>
 const isObject = (obj) =>
   obj !== null && typeof obj === "object" && !Array.isArray(obj);
 
-module.exports = { splitArray, isObject };
+const spliceObject = (obj, keys = [], removeEmpty = true) => {
+  if (!obj) return;
+  return {
+    selected: Object.entries(obj)
+      .filter(
+        ([key, value]) =>
+          keys.includes(key) &&
+          (!removeEmpty || value || typeof value === "boolean")
+      )
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+    spliced: Object.entries(obj)
+      .filter(
+        ([key, value]) =>
+          !keys.includes(key) &&
+          (!removeEmpty || value || typeof value === "boolean")
+      )
+      .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+  };
+};
+
+module.exports = { splitArray, isObject, spliceObject };

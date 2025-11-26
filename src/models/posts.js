@@ -4,6 +4,7 @@ const { normalizeMongoDoc } = require("../utils/normalize.mongo.doc");
 const { splitArray } = require("../utils/library");
 const { workerSize } = require("../config.json");
 const { Worker } = require("worker_threads");
+const { prefix } = require("../config.json");
 
 const getPostData = async (page) => {
   try {
@@ -28,9 +29,9 @@ const getPostData = async (page) => {
             'term', c.taxonomy
           )
         )
-        FROM wp_term_relationships b
-        LEFT JOIN wp_term_taxonomy c ON b.term_taxonomy_id = c.term_taxonomy_id
-        LEFT JOIN wp_terms d ON c.term_id = d.term_id
+        FROM ${prefix}term_relationships b
+        LEFT JOIN ${prefix}term_taxonomy c ON b.term_taxonomy_id = c.term_taxonomy_id
+        LEFT JOIN ${prefix}terms d ON c.term_id = d.term_id
         WHERE b.object_id = a.id
       ) AS term,
       (
@@ -39,10 +40,10 @@ const getPostData = async (page) => {
             'id', e.meta_value
           )
         )
-        FROM wp_postmeta e
+        FROM ${prefix}postmeta e
         WHERE e.post_id = a.id AND meta_key = "_thumbnail_id"
       ) AS media
-      FROM wp_posts a
+      FROM ${prefix}posts a
   
       WHERE a.post_status = "publish" AND a.post_type = "post" ORDER BY ID ASC`;
     const result = await query(SQL);
@@ -52,7 +53,7 @@ const getPostData = async (page) => {
   }
 };
 
-const migratePost = async () => {
+const migratePost = async ({ isMultilanguage, migratePaketWisata }) => {
   return new Promise(async (resolve, reject) => {
     try {
       console.clear();
@@ -107,6 +108,8 @@ const migratePost = async () => {
             allUser: normalizeMongoDoc(allUser),
             allMedia: normalizeMongoDoc(allMedia),
             result: item,
+            isMultilanguage,
+            migratePaketWisata,
           },
         });
 
@@ -138,13 +141,32 @@ const migratePost = async () => {
             return;
           }
 
-          resultData.push(data.data);
+          resultData.push(data.resultData);
           workerDone++;
 
           if (workerDone === dataWorker.length) {
             console.clear();
             console.log(`Worker done ${workerDone}/${dataWorker.length}`);
-            resolve(resultData);
+
+            const accumulation = resultData.reduce((acc, current) => {
+              if (!acc) return current;
+              Object.keys(current).forEach((key) => {
+                if (!acc[key]) {
+                  acc[key] = [];
+                }
+                acc[key] = acc[key].concat(current[key]);
+              });
+              return acc;
+            }, {});
+
+            resolve(
+              Object.fromEntries(
+                Object.entries(accumulation).map(([key, value]) => [
+                  key,
+                  value.reduce((a, b) => a + b, 0),
+                ])
+              )
+            );
           }
         });
 

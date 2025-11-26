@@ -1,19 +1,20 @@
 const { mongo } = require("../db/mongo_connection");
 
-const finalizing = async () => {
+const finalizing = async ({ migratePaketWisata, ...term }) => {
   console.clear();
   process.stdout.write(`\r(Database) Finalizing...\r`);
   const listCollections = {
     analytics: null,
     tokens: null,
     posts_lock: null,
+    settings: null,
     posts: "idOld",
     posts_maintain: "idOld",
-    paketWisata: "idOld",
     media: "oldId",
     users: "ID",
     tags: "oldId",
     categories: "oldId",
+    ...(term.migratePaketWisata && { paketWisata: "idOld" }),
   };
   const currentCollections = (
     await (await mongo()).listCollections().toArray()
