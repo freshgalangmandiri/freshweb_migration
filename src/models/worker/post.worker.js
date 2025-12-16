@@ -82,7 +82,7 @@ const migratePaketWisata = false;
       if (isMultilanguage) {
         current = {
           ...current,
-          slugs: [current.slugs], // only for multiple language
+          slugs: [current.slug], // only for multiple language
           language: {
             id: {
               title: current.title,
