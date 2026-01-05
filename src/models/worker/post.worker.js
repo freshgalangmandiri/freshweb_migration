@@ -1,7 +1,11 @@
 const { parentPort, workerData } = require("worker_threads");
 const { mongo, ObjectId } = require("../../db/mongo_connection");
 const { formatPw, isIntersection } = require("../../utils/formatPw");
-const { isObject, spliceObject } = require("../../utils/library");
+const {
+  isObject,
+  spliceObject,
+  convertCompatibleContent,
+} = require("../../utils/library");
 const { htmlToMarkdown } = require("../../utils/htmlToMarkdown");
 
 const isMultilanguage = true;
@@ -123,10 +127,10 @@ const migratePaketWisata = false;
         );
       } else {
         if (isMultilanguage) {
-          current.language.id.content = htmlToMarkdown(
+          current.language.id.content = convertCompatibleContent(
             current.language.id.content
           );
-        } else current.content = htmlToMarkdown(current.content);
+        } else current.content = convertCompatibleContent(current.content);
       }
 
       if (_isPaketWisata && migratePaketWisata) {

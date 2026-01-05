@@ -1,3 +1,6 @@
+const { htmlToMarkdown } = require("./htmlToMarkdown");
+const { convertMarkdownToJSON } = require("./markdown.to.json");
+
 const splitArray = (arr, size) =>
   arr.reduce((acc, curr, i) => {
     size = size || 1;
@@ -29,4 +32,18 @@ const spliceObject = (obj, keys = [], removeEmpty = true) => {
   };
 };
 
-module.exports = { splitArray, isObject, spliceObject };
+const convertCompatibleContent = (content) => {
+  if (!content) return content;
+
+  const markdown = htmlToMarkdown(content);
+  const jsonData = convertMarkdownToJSON(markdown);
+
+  return jsonData;
+};
+
+module.exports = {
+  splitArray,
+  isObject,
+  spliceObject,
+  convertCompatibleContent,
+};
