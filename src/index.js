@@ -19,6 +19,8 @@ const option = {
     const media = await migrateMedia();
     const post = await migratePost({ ...option });
 
+    return;
+
     await finalizing({ ...option });
     console.clear();
     console.log({

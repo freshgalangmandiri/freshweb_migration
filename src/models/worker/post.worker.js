@@ -176,4 +176,8 @@ const migratePaketWisata = false;
   console.log({ resultData });
 
   parentPort.postMessage({ type: "done", resultData });
+
+  if (global.gc) {
+    global.gc();
+  }
 })();

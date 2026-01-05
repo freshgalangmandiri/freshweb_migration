@@ -113,6 +113,7 @@ const migrateTerm = async ({ migratePaketWisata }) => {
       )
     );
   } catch (error) {
+    console.log(error)
     throw new Error("Failed to migrate tags and categories");
   }
 };
