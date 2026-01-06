@@ -7,8 +7,7 @@ const {
   convertCompatibleContent,
   splitArray,
 } = require("../../utils/library");
-const { htmlToMarkdown } = require("../../utils/htmlToMarkdown");
-const { processingData } = require("../../config.json");
+const { processingData, isJadwalPelatihan } = require("../../config.json");
 
 class PostWorker {
   constructor() {
@@ -21,11 +20,20 @@ class PostWorker {
     this.allUser = workerData.allUser;
     this.allMedia = workerData.allMedia;
     this.result = workerData.result;
+    this.allJadwalPelatihan = workerData.allJadwalPelatihan;
     this.isMultilanguage = workerData.isMultilanguage;
     this.migratePaketWisata = workerData.migratePaketWisata;
+    this.count = 0;
 
     // Data Process
     this.data = splitArray(this.result, this.processingData);
+
+    // result
+    this.resultData = {
+      posts: 0,
+      paketWisata: 0,
+      posts_maintain: 0,
+    };
   }
 
   getCategories(ids) {
@@ -90,6 +98,11 @@ class PostWorker {
           image: current.media,
         };
 
+        if (isJadwalPelatihan)
+          current.jadwalPelatihan = this.allJadwalPelatihan[current.idOld]?.map(
+            (item) => new ObjectId(item)
+          );
+
         if (this.isMultilanguage) {
           current = {
             ...current,
@@ -152,9 +165,9 @@ class PostWorker {
         }
         const progress = {
           type: "progress",
-          precentage: (((index + 1) / this.result.length) * 100).toFixed(2),
+          precentage: ((this.count++ / this.result.length) * 100).toFixed(2),
           total: this.result.length,
-          finished: index + 1,
+          finished: this.count,
         };
 
         parentPort.postMessage(progress);
@@ -168,20 +181,27 @@ class PostWorker {
     );
 
     // console.clear();
-    const resultData = Object.fromEntries(
-      await Promise.all(
-        Object.entries(data).map(async ([key, value]) => {
-          if (value.length) {
-            await (await mongo()).collection(key).insertMany(value);
-            return [key, value.length];
-          }
-          return [key, 0];
-        })
-      )
+    // const resultData = Object.fromEntries(
+    //   await Promise.all(
+    //     Object.entries(data).map(async ([key, value]) => {
+    //       if (value.length) {
+    //         await (await mongo()).collection(key).insertMany(value);
+    //         return [key, value.length];
+    //       }
+    //       return [key, 0];
+    //     })
+    //   )
+    // );
+    await Promise.all(
+      Object.entries(data).map(async ([key, value]) => {
+        if (value.length) {
+          await (await mongo()).collection(key).insertMany(value);
+          this.resultData[key] = this.resultData[key] + value.length;
+        }
+      })
     );
 
     if (this.data[sequence + 1]) return await this.migratePost(sequence + 1);
-    parentPort.postMessage({ type: "done", resultData });
 
     return 1;
   }
@@ -194,4 +214,7 @@ class PostWorker {
 (async () => {
   const worker = new PostWorker();
   await worker.start();
+
+  const result = worker.resultData;
+  parentPort.postMessage({ type: "done", resultData: result });
 })();

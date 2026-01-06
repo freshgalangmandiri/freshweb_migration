@@ -1,4 +1,5 @@
 const { mongo } = require("../db/mongo_connection");
+const { isJadwalPelatihan } = require("../config.json");
 
 const resetDb = async () => {
   try {
@@ -13,6 +14,9 @@ const resetDb = async () => {
       "paketWisata",
       "media",
     ];
+
+    if (isJadwalPelatihan) collections.push("jadwalPelatihan");
+
     const result = await Promise.all(
       collections.map(async (collection) => {
         return await (await mongo()).collection(collection).deleteMany({});

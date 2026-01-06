@@ -1,4 +1,5 @@
 const { mongo } = require("../db/mongo_connection");
+const { isJadwalPelatihan } = require("../config.json");
 
 const finalizing = async ({ migratePaketWisata, ...term }) => {
   console.clear();
@@ -15,6 +16,7 @@ const finalizing = async ({ migratePaketWisata, ...term }) => {
     tags: "oldId",
     categories: "oldId",
     ...(term.migratePaketWisata && { paketWisata: "idOld" }),
+    ...(isJadwalPelatihan && { jadwalPelatihan: "postId" }),
   };
   const currentCollections = (
     await (await mongo()).listCollections().toArray()

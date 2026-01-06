@@ -2,9 +2,8 @@ const { mongo } = require("../db/mongo_connection");
 const { query } = require("../db/mysql_connnection");
 const { normalizeMongoDoc } = require("../utils/normalize.mongo.doc");
 const { splitArray } = require("../utils/library");
-const { workerSize } = require("../config.json");
+const { workerSize, prefix, isJadwalPelatihan } = require("../config.json");
 const { Worker } = require("worker_threads");
-const { prefix } = require("../config.json");
 
 const getPostData = async (page) => {
   try {
@@ -53,6 +52,23 @@ const getPostData = async (page) => {
   }
 };
 
+const getJadwalPelatihan = async () => {
+  const mongoinstance = (await mongo()).collection("jadwalPelatihan");
+
+  // get data inserted
+  const insertedData = await mongoinstance
+    .find({}, { projection: { _id: 1, postId: 1 } })
+    .toArray();
+
+  const jadwalByPostid = insertedData.reduce((acc, current) => {
+    acc[current.postId] = acc[current.postId] || [];
+    acc[current.postId].push(current._id?.toString());
+    return acc;
+  }, {});
+
+  return jadwalByPostid;
+};
+
 const migratePost = async ({ isMultilanguage, migratePaketWisata }) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -77,6 +93,7 @@ const migratePost = async ({ isMultilanguage, migratePaketWisata }) => {
         .collection("media")
         .find()
         .toArray();
+      let allJadwalPelatihan = [];
       console.clear();
       console.log("Tags", allTag.length);
       console.log("Categories", allCat.length);
@@ -95,6 +112,20 @@ const migratePost = async ({ isMultilanguage, migratePaketWisata }) => {
       const itemDone = progress;
       console.log(`Total post ${result.length}`);
 
+      if (isJadwalPelatihan) {
+        console.log("Getting Jadwal Pelatihan Data ...");
+        allJadwalPelatihan = await getJadwalPelatihan();
+
+        console.log(
+          `Total jadwal pelatihan ${
+            Object.values(allJadwalPelatihan).flat().length
+          }`
+        );
+
+        // console.log(allJadwalPelatihan);
+        // return;
+      }
+
       const resultData = [];
       let workerDone = 0;
 
@@ -107,6 +138,7 @@ const migratePost = async ({ isMultilanguage, migratePaketWisata }) => {
             allTag: normalizeMongoDoc(allTag),
             allUser: normalizeMongoDoc(allUser),
             allMedia: normalizeMongoDoc(allMedia),
+            allJadwalPelatihan,
             result: item,
             isMultilanguage,
             migratePaketWisata,
