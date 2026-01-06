@@ -5,9 +5,11 @@ const { migratePost } = require("./models/posts");
 const { migrateTerm } = require("./models/term");
 const { migrateUser } = require("./models/users");
 
+const { isMultilanguage, migratePaketWisata } = require("./config.json");
+
 const option = {
-  isMultilanguage: true,
-  migratePaketWisata: false,
+  isMultilanguage: isMultilanguage,
+  migratePaketWisata: migratePaketWisata,
 };
 
 (async () => {
