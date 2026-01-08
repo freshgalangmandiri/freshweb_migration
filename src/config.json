@@ -2,18 +2,18 @@
   "database": {
     "host": "localhost",
     "user": "root",
-    "password": "Qawsed#1",
-    "database": "training_sdm"
+    "port": 3306,
+    "password": "bismillah",
+    "database": "temp"
   },
   "destination_database": {
-    "url": "mongodb://root:Qawsed%231@localhost:27017/",
-    "database": "training_sdm"
+    "url": "mongodb://root:example@localhost:27017/",
+    "database": "arenakang"
   },
   "workerSize": 7,
   "processingData": 100,
   "isMultilanguage": false,
   "migratePaketWisata": false,
-  "isJadwalPelatihan": true,
-  "prefix": "wp_"
+  "isJadwalPelatihan": false,
+  "prefix": "aw_"
 }
-

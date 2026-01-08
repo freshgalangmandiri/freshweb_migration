@@ -7,6 +7,8 @@ const { migrateUser } = require("./models/users");
 
 const { isMultilanguage, migratePaketWisata } = require("./config.json");
 const { migrateJadwalPelatihan } = require("./models/jadwal.pelatihan");
+const { testDB } = require("./models/db_testconnection");
+const { initial } = require("./initial");
 
 const option = {
   isMultilanguage: isMultilanguage,
@@ -15,6 +17,8 @@ const option = {
 
 (async () => {
   try {
+    await initial();
+    await testDB();
     await resetDb();
 
     const term = await migrateTerm({ ...option });
@@ -38,6 +42,7 @@ const option = {
     });
     process.exit();
   } catch (error) {
+    console.clear();
     console.log("Failed to migrate");
     console.error(error);
     process.exit(1);

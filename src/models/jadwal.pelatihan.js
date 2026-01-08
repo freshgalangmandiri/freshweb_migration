@@ -29,11 +29,15 @@ const migrateJadwalPelatihan = async () => {
   try {
     if (!isJadwalPelatihan) return { jadwalPelatihan: 0 };
 
+    console.clear();
+    console.log("(Jadwal Pelatihan) Getting Data");
     const mongoinstance = (await mongo()).collection("jadwalPelatihan");
     const result = await getJadwalPelatihan();
 
     // Insert to mongo
     console.clear();
+    console.log("(Jadwal Pelatihan) Total Data ", result.length);
+    console.log("(Jadwal Pelatihan) Migrating Data...");
     await mongoinstance.insertMany(result);
 
     return { jadwalPelatihan: result.length };
