@@ -1,14 +1,14 @@
-const { finalizing } = require("./models/db_finalizing");
+const { initial } = require("./initial");
+const { testDB } = require("./models/db_testconnection");
 const { resetDb } = require("./models/db_reset");
+const { finalizing } = require("./models/db_finalizing");
 const { migrateMedia } = require("./models/media");
 const { migratePost } = require("./models/posts");
 const { migrateTerm } = require("./models/term");
 const { migrateUser } = require("./models/users");
+const { migrateJadwalPelatihan } = require("./models/jadwal.pelatihan");
 
 const { isMultilanguage, migratePaketWisata } = require("./config.json");
-const { migrateJadwalPelatihan } = require("./models/jadwal.pelatihan");
-const { testDB } = require("./models/db_testconnection");
-const { initial } = require("./initial");
 
 const option = {
   isMultilanguage: isMultilanguage,
