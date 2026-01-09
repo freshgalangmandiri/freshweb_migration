@@ -5,8 +5,9 @@ const {
   isObject,
   convertCompatibleContent,
   splitArray,
+  encodeBase62,
+  decodeBase62,
 } = require("../../utils/library");
-const { v7: uuid } = require("uuid");
 const { processingData, isJadwalPelatihan } = require("../../config.json");
 
 class PostWorker {
@@ -23,6 +24,7 @@ class PostWorker {
     this.allJadwalPelatihan = workerData.allJadwalPelatihan;
     this.isMultilanguage = workerData.isMultilanguage;
     this.migratePaketWisata = workerData.migratePaketWisata;
+    this.workerid = workerData.workerIndex;
     this.count = 0;
 
     // Data Process
@@ -104,6 +106,7 @@ class PostWorker {
           );
 
         if (this.isMultilanguage) {
+          const uid = new Date().getTime().toString() + this.workerid + index;
           current = {
             ...current,
             title: current.title,
@@ -112,7 +115,7 @@ class PostWorker {
             slug: current.slug,
             metadata: current.metadata,
             lang: "id",
-            uid: uuid(),
+            uid: encodeBase62(uid),
           };
         }
 

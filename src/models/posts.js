@@ -142,6 +142,7 @@ const migratePost = async ({ isMultilanguage, migratePaketWisata }) => {
             result: item,
             isMultilanguage,
             migratePaketWisata,
+            workerIndex: index,
           },
         });
 

@@ -41,9 +41,36 @@ const convertCompatibleContent = (content) => {
   return jsonData;
 };
 
+const encodeBase62 = (number) => {
+  const CHARSET =
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let num = BigInt("0x" + number);
+  let result = "";
+
+  while (num > 0n) {
+    result = CHARSET[Number(num % 62n)] + result;
+    num = num / 62n;
+  }
+
+  return result;
+};
+
+const decodeBase62 = (shortId) => {
+  const CHARSET =
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let num = 0n;
+  for (const char of shortId) {
+    num = num * 62n + BigInt(CHARSET.indexOf(char));
+  }
+
+  return num.toString(16);
+};
+
 module.exports = {
   splitArray,
   isObject,
   spliceObject,
   convertCompatibleContent,
+  encodeBase62,
+  decodeBase62,
 };
