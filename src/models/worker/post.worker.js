@@ -139,11 +139,7 @@ class PostWorker {
               .replace(/\<\/strong*/g, "</h3")
           );
         } else {
-          if (this.isMultilanguage) {
-            current.language.id.content = convertCompatibleContent(
-              current.language.id.content
-            );
-          } else current.content = convertCompatibleContent(current.content);
+          current.content = convertCompatibleContent(current.content);
         }
 
         if (_isPaketWisata && this.migratePaketWisata) {

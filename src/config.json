@@ -8,11 +8,11 @@
   },
   "destination_database": {
     "url": "mongodb://root:example@localhost:27017/",
-    "database": "arenakang"
+    "database": "arena"
   },
   "workerSize": 7,
   "processingData": 100,
-  "isMultilanguage": false,
+  "isMultilanguage": true,
   "migratePaketWisata": false,
   "isJadwalPelatihan": false,
   "prefix": "aw_"
