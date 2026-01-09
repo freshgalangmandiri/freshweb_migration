@@ -7,6 +7,7 @@ const {
   convertCompatibleContent,
   splitArray,
 } = require("../../utils/library");
+const { v7: uuid } = require("uuid");
 const { processingData, isJadwalPelatihan } = require("../../config.json");
 
 class PostWorker {
@@ -106,22 +107,14 @@ class PostWorker {
         if (this.isMultilanguage) {
           current = {
             ...current,
-            slugs: [current.slug], // only for multiple language
-            language: {
-              id: {
-                title: current.title,
-                content: current.content,
-                subtitle: current.subtitle,
-                slug: current.slug,
-                metadata: current.metadata,
-              },
-            },
+            title: current.title,
+            content: current.content,
+            subtitle: current.subtitle,
+            slug: current.slug,
+            metadata: current.metadata,
+            lang: "id",
+            uid: uuid(),
           };
-
-          current = spliceObject(
-            { ...current, metadata: { image: current.metadata.image } },
-            ["title", "subtitle", "slug", "content"]
-          ).spliced;
         }
 
         const oldCat = term
