@@ -3,7 +3,6 @@ const { mongo, ObjectId } = require("../../db/mongo_connection");
 const { formatPw, isIntersection } = require("../../utils/formatPw");
 const {
   isObject,
-  spliceObject,
   convertCompatibleContent,
   splitArray,
 } = require("../../utils/library");
